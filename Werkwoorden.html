@@ -54,6 +54,7 @@
         .back-btn:hover { background-color: #4a5568; }
     </style>
 
+    <!-- Koppel de centrale woordenlijst -->
     <script src="werkwoorden.js"></script>
 </head>
 <body>
@@ -80,14 +81,16 @@
 </div>
 
 <script>
-    // Laad de lijst uit werkwoorden.js
-    let woordenlijst = fixedWerkwoordenlijst;
+    // Dit werkt automatisch voor zowel woordenlijst als werkwoordenlijst, 
+    // afhankelijk van welk bestand dit is.
+    let woordenlijst = typeof fixedWerkwoordenlijst !== 'undefined' ? fixedWerkwoordenlijst : fixedWoordenlijst;
 
     let huidigWoord = null;
     let correctAttempts = 0;
     let totalAttempts = 0;
     let wachtOpVolgendeNaFout = false; 
 
+    // Luister naar de Enter-toets in het tekstveld
     document.getElementById('antwoordEntry').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             verwerkEnter();
@@ -96,16 +99,18 @@
 
     function verwerkEnter() {
         if (wachtOpVolgendeNaFout) {
+            // Tweede keer Enter: reset de status en start de volgende oefening (het veld wordt dan gewist)
             wachtOpVolgendeNaFout = false;
             startOefening();
         } else {
+            // Eerste keer Enter: controleer het antwoord
             checkAntwoord();
         }
     }
 
     function startOefening() {
         if (!woordenlijst || woordenlijst.length === 0) {
-            document.getElementById('vraagLabel').innerText = "Fout: werkwoorden.js niet gevonden of leeg.";
+            document.getElementById('vraagLabel').innerText = "Fout: Lijst niet gevonden of leeg.";
             return;
         }
 
@@ -116,11 +121,11 @@
 
         document.getElementById('vraagLabel').innerText = `Vertaal: ${vraag}`;
         document.getElementById('feedbackLabel').innerText = "";
-        document.getElementById('antwoordEntry').value = ""; 
+        document.getElementById('antwoordEntry').value = ""; // Maak het veld nu pas leeg
         document.getElementById('antwoordEntry').focus();
     }
 
-    function checkAntwoord() {
+ function checkAntwoord() {
         if (!huidigWoord) return;
 
         const antwoordVeld = document.getElementById('antwoordEntry');
@@ -131,13 +136,35 @@
         totalAttempts++;
         const feedbackLabel = document.getElementById('feedbackLabel');
 
-        if (gebruikerAntwoord === correct) {
+        // Splits het juiste antwoord op komma's, schuine strepen en verticale strepen
+        const toegestaneBetekenissen = correct.split(/[,/|]/).map(betekenis => betekenis.trim());
+
+        // Controleer of het ingevulde antwoord een van de juiste opties is
+        const isCorrect = toegestaneBetekenissen.includes(gebruikerAntwoord) || gebruikerAntwoord === correct;
+
+        if (isCorrect) {
             correctAttempts++;
-            feedbackLabel.innerText = "✅ Correct!";
-            feedbackLabel.style.color = "green";
-            huidigWoord = null;
-            setTimeout(startOefening, 1200); 
+            huidigWoord = null; // Reset het huidige woord zodat de status klopt
+
+            // 👈 NIEUW: Controleren of er meerdere betekenissen waren
+            if (toegestaneBetekenissen.length > 1) {
+                feedbackLabel.innerText = `✅ Correct! Andere betekenissen: ${correct}`;
+                feedbackLabel.style.color = "green";
+                
+                // Zet de vlag aan zodat we wachten op de tweede Enter, net als bij een fout antwoord
+                wachtOpVolgendeNaFout = true; 
+                
+                // Selecteer de tekst zodat je eventueel direct kunt typen bij de volgende vraag
+                antwoordVeld.focus();
+                antwoordVeld.select();
+            } else {
+                // Slechts 1 betekenis? Dan gewoon direct na 1,2 seconde doorgaan zoals voorheen
+                feedbackLabel.innerText = "✅ Correct!";
+                feedbackLabel.style.color = "green";
+                setTimeout(startOefening, 1200); 
+            }
         } else {
+            // Fout antwoord: toon het juiste antwoord en wacht op Enter
             feedbackLabel.innerText = `❌ Fout. Correct antwoord: ${correct}`;
             feedbackLabel.style.color = "red";
             wachtOpVolgendeNaFout = true; 
