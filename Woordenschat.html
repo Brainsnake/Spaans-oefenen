@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nederlands - Spaans Trainer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h1 { font-size: 1.8rem; color: #2d3748; }
+        .radio-group { margin: 15px 0; }
+        button {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+            width: 100%;
+        }
+        button:hover { background-color: #2b6cb0; }
+        .vraag { font-size: 2rem; font-weight: bold; margin: 20px 0; color: #1a202c; }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 2px solid #cbd5e0;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .feedback { font-size: 1.2rem; font-weight: bold; margin: 10px 0; min-height: 28px; }
+        .score { font-size: 1.1rem; font-weight: bold; color: #718096; margin: 15px 0; }
+        .back-btn { background-color: #718096; width: auto; padding: 8px 15px; margin-bottom: 20px; }
+        .back-btn:hover { background-color: #4a5568; }
+    </style>
+
+    <!-- Koppel de centrale woordenlijst -->
+    <script src="woorden.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html"><button class="back-btn">← Terug naar Menu</button></a>
+    <h1>Woordenschat Trainer</h1>
+    
+    <div class="radio-group">
+        <label><input type="radio" name="richting" value="nl-es" checked> Nederlands → Spaans</label>
+        <br>
+        <label><input type="radio" name="richting" value="es-nl"> Spaans → Nederlands</label>
+    </div>
+
+    <button onclick="startOefening()">Start oefening</button>
+
+    <div class="vraag" id="vraagLabel">Druk op start...</div>
+
+    <input type="text" id="antwoordEntry" placeholder="Jouw antwoord" autocomplete="off">
+    <button onclick="verwerkEnter()">Controleer</button>
+
+    <div class="feedback" id="feedbackLabel"></div>
+    <div class="score" id="scoreLabel">Score: 0/0 (0%)</div>
+</div>
+
+<script>
+    let woordenlijst = fixedWoordenlijst;
+
+    let huidigWoord = null;
+    let correctAttempts = 0;
+    let totalAttempts = 0;
+    let wachtOpVolgendeNaFout = false; 
+
+    // Luister naar de Enter-toets in het tekstveld
+    document.getElementById('antwoordEntry').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            verwerkEnter();
+        }
+    });
+
+    function verwerkEnter() {
+        if (wachtOpVolgendeNaFout) {
+            // Tweede keer Enter: reset de status en start de volgende oefening (het veld wordt dan gewist)
+            wachtOpVolgendeNaFout = false;
+            startOefening();
+        } else {
+            // Eerste keer Enter: controleer het antwoord
+            checkAntwoord();
+        }
+    }
+
+    function startOefening() {
+        if (!woordenlijst || woordenlijst.length === 0) {
+            document.getElementById('vraagLabel').innerText = "Fout: woorden.js niet gevonden of leeg.";
+            return;
+        }
+
+        wachtOpVolgendeNaFout = false; 
+        huidigWoord = woordenlijst[Math.floor(Math.random() * woordenlijst.length)];
+        const richting = document.querySelector('input[name="richting"]:checked').value;
+        const vraag = richting === "nl-es" ? huidigWoord.nl : huidigWoord.es;
+
+        document.getElementById('vraagLabel').innerText = `Vertaal: ${vraag}`;
+        document.getElementById('feedbackLabel').innerText = "";
+        document.getElementById('antwoordEntry').value = ""; // Maak het veld nu pas leeg
+        document.getElementById('antwoordEntry').focus();
+    }
+
+    function checkAntwoord() {
+        if (!huidigWoord) return;
+
+        const antwoordVeld = document.getElementById('antwoordEntry');
+        const gebruikerAntwoord = antwoordVeld.value.trim().toLowerCase();
+        const richting = document.querySelector('input[name="richting"]:checked').value;
+        const correct = richting === "nl-es" ? huidigWoord.es.toLowerCase() : huidigWoord.nl.toLowerCase();
+
+        totalAttempts++;
+        const feedbackLabel = document.getElementById('feedbackLabel');
+
+        if (gebruikerAntwoord === correct) {
+            correctAttempts++;
+            feedbackLabel.innerText = "✅ Correct!";
+            feedbackLabel.style.color = "green";
+            huidigWoord = null;
+            setTimeout(startOefening, 1200); 
+        } else {
+            feedbackLabel.innerText = `❌ Fout. Correct antwoord: ${correct}`;
+            feedbackLabel.style.color = "red";
+            wachtOpVolgendeNaFout = true; 
+            
+            // 👈 Laat de tekst staan en selecteer deze (zodat je eventueel meteen overschrijft als je typt)
+            antwoordVeld.focus();
+            antwoordVeld.select();
+        }
+
+        const percentage = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 0;
+        document.getElementById('scoreLabel').innerText = `Score: ${correctAttempts}/${totalAttempts} (${percentage}%)`;
+    }
+</script>
+
+</body>
+</html>
