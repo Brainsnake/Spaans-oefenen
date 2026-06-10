@@ -31,7 +31,7 @@ const fixedWerkwoordenlijst = [
     { nl: "zoeken", es: "buscar" },
     { nl: "passen (kleding) | ergens in passen", es: "caber" },
     { nl: "zwijgen", es: "callar" },
-    { nl: "wisselen / ruilen", es: "cambiar" },
+    { nl: "wisselen | ruilen", es: "cambiar" },
     { nl: "zingen", es: "cantar" },
     { nl: "jagen", es: "cazar" },
     { nl: "zich borstelen", es: "cepillarse" },
@@ -50,7 +50,7 @@ const fixedWerkwoordenlijst = [
     { nl: "kosten", es: "costar" },
     { nl: "roddelen", es: "cotillear" },
     { nl: "opgroeien", es: "crecer" },
-    { nl: "vinden / geloven", es: "creer" },
+    { nl: "vinden | geloven", es: "creer" },
     { nl: "bedekken | afdekken", es: "cubrir" },
     { nl: "voldoen | vervullen | nakomen", es: "cumplir" },
     { nl: "geven", es: "dar" },
@@ -157,7 +157,8 @@ const fixedWerkwoordenlijst = [
     { nl: "weigeren | afwijzen", es: "rechazar" },
     { nl: "ontvangen", es: "recibir" },
     { nl: "ophalen | afhalen", es: "recoger" },
-    { nl: "onderhandelen", es: "regatear" },
+    { nl: "onderhandelen", es: "negociar" },
+    { nl: "afdingen | onderhandelen over de prijs", es: "regatear" },
     { nl: "terugkeren", es: "regresar" },
     { nl: "Herhalen", es: "repitir" },
     { nl: "oplossen", es: "resolver" },
@@ -257,6 +258,6 @@ const fixedWerkwoordenlijst = [
     { nl: "opereren", es: "operar" },
     { nl: "zich laten opereren", es: "operarse" },
     { nl: "dwars oversteken | doorkruisen", es: "atravesar" },
-    { nl: "uitzetten | uitdoen (alles wat een schakelaar heeft) | doven (alles wat warmte geeft)", es: "apagar" },
-    { nl: "aandoen of ontsteken van : licht electronica of vuur", es: "encender" }
+    { nl: "uitzetten | uitdoen (met schakelaar) | doven (wat warmte geeft)", es: "apagar" },
+	{ nl: "aandoen | aanzetten (licht/elektronica) | ontsteken (vuur)", es: "encender" }
 ];

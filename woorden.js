@@ -917,7 +917,7 @@ const fixedWoordenlijst = [
     { nl: "een jongere broer", es: "un hermano menor" },
     { nl: "hij is zeer lelijk", es: "es muy feo" },
     { nl: "zij is zeer lelijk", es: "es muy fea" },
-    { nl: "hij is zeer knap", es: "ï¿½l es muy guapo" },
+    { nl: "hij is zeer knap", es: "él es muy guapo" },
     { nl: "zij is zeer knap", es: "ella es muy guapa" },
     { nl: "een beetje mollig | een beetje dik", es: "un poco gordito" },
     { nl: "ik ben vrij klein | Ik ben nogal klein", es: "Soy bastante baja" },
