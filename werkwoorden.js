@@ -193,7 +193,7 @@ const fixedWerkwoordenlijst = [
     { nl: "terugkomen | teruggaan", es: "volver" },
     { nl: "erven", es: "heredar" },
     { nl: "afwassen", es: "fregar" },
-    { nl: "repareren", es: "arreglar" },
+    { nl: "herstellen", es: "arreglar" },
     { nl: "tekenen | schetsen", es: "dibujar" },
     { nl: "krabben | krassen", es: "rascar" },
     { nl: "duizelig maken | als iemand zeeziek wordt", es: "marear" },
